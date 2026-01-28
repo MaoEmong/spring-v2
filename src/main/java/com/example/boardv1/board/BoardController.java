@@ -18,6 +18,21 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    // body : title=title7&content=content7 (x-www-form)
+    // 클래스로 데이터 받기
+    @PostMapping("/boards/save")
+    public String save(BoardSaveDTO reqDTO) {
+        boardService.게시글쓰기(reqDTO.getTitle(), reqDTO.getContent());
+        return "redirect:/";
+    }
+    // 기본 방법
+    // @PostMapping("/boards/save")
+    // public String save(HttpServletRequest req) {
+    // String title = req.getParameter("title");
+    // String content = req.getParameter("content");
+    // return "";
+    // }
+
     @GetMapping("/")
     public String index(HttpServletRequest req) {
         List<Board> list = boardService.게시글목록();
@@ -50,5 +65,11 @@ public class BoardController {
         Board board = boardService.상세보기(id);
         req.setAttribute("model", board);
         return "board/detail";
+    }
+
+    @PostMapping("/boards/{id}/delete")
+    public String delete(@PathVariable("id") int id) {
+        boardService.게시글삭제(id);
+        return "redirect:/";
     }
 }

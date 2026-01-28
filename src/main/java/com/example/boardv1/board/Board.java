@@ -31,4 +31,5 @@ public class Board {
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt; // DB에 생성 시 create_at으로 생성됨
+
 }
