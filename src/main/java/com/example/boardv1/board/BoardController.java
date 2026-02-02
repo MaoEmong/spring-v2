@@ -6,32 +6,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
-// Controller는 Service에 의존함
 @RequiredArgsConstructor
-@Controller // Controller는 return값이 파일이 됨
+@Controller
 public class BoardController {
 
     private final BoardService boardService;
 
-    // body : title=title7&content=content7 (x-www-form)
-    // 클래스로 데이터 받기
     @PostMapping("/boards/save")
-    public String save(BoardSaveDTO reqDTO) {
+    public String save(BoardRequest.SaveOrUpdateDTO reqDTO) {
         boardService.게시글쓰기(reqDTO.getTitle(), reqDTO.getContent());
         return "redirect:/";
     }
-    // 기본 방법
-    // @PostMapping("/boards/save")
-    // public String save(HttpServletRequest req) {
-    // String title = req.getParameter("title");
-    // String content = req.getParameter("content");
-    // return "";
-    // }
 
     @GetMapping("/")
     public String index(HttpServletRequest req) {
@@ -52,11 +41,9 @@ public class BoardController {
         return "board/update-form";
     }
 
-    // body : title=val1&content=val2
     @PostMapping("/boards/{id}/update")
-    public String update(@PathVariable("id") int id, @RequestParam("title") String title,
-            @RequestParam("content") String content) {
-        boardService.게시글수정(id, title, content);
+    public String update(@PathVariable("id") int id, BoardRequest.SaveOrUpdateDTO reqDTO) {
+        boardService.게시글수정(id, reqDTO.getTitle(), reqDTO.getContent());
         return "redirect:/boards/" + id;
     }
 
