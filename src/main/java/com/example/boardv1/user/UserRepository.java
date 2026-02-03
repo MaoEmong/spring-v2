@@ -25,11 +25,15 @@ public class UserRepository {
         return Optional.ofNullable(findUser);
     }
 
-    // 로그인 할 때 username으로 조회해서 password 검증
+    // 로그인할때 username으로 조회해서 password 검증
     public Optional<User> findByUsername(String username) {
-        return em.createQuery("select u from User u where u.username = :username", User.class)
-                .setParameter("username", username)
-                .getResultStream()
-                .findFirst();
+        try {
+            User user = em.createQuery("select u from User u where u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            return Optional.of(user);
+        } catch (Exception e) {
+            return Optional.ofNullable(null);
+        }
     }
 }

@@ -4,7 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -15,17 +16,25 @@ public class UserController {
     private final UserService userService;
     private final HttpSession session;
 
-    // 조회인데, 예외로 post 요청
+    @GetMapping("/logout")
+    public String logout() {
+        session.invalidate();
+        // session.removeAttribute("sessionUser");
+        return "/";
+    }
 
+    // 조회인데, 예외로 post 요청
     @PostMapping("/login")
-    public String login(UserRequest.LoginDTO reqDTO, HttpServletRequest req) {
+    public String login(UserRequest.LoginDTO reqDTO, HttpServletResponse resp) {
         // HttpSession session = req.getSession();
 
         User sessionUser = userService.로그인(reqDTO.getUsername(), reqDTO.getPassword());
         session.setAttribute("sessionUser", sessionUser);
 
         // http Response header에 Set-Cokkie : sesssionKey 저장되서 응답됨
-
+        Cookie cookie = new Cookie("username", sessionUser.getUsername());
+        cookie.setHttpOnly(false); // false일때 자바스크립트에서 접근이 됨
+        resp.addCookie(cookie);
         return "redirect:/";
     }
 

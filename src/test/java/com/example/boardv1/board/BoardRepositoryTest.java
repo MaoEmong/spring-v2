@@ -90,4 +90,14 @@ public class BoardRepositoryTest {
         // eye
         em.flush();
     }
+
+    @Test
+    public void orm_Test() {
+        int id = 1;
+
+        Board board = boardRepository.findById(id).get();
+        System.out.println("board -> user -> id : " + board.getUser().getId());
+        System.out.println("=====================================================");
+        System.out.println("board -> user -> username : " + board.getUser().getUsername());
+    }
 }

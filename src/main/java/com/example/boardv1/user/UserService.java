@@ -15,11 +15,11 @@ public class UserService {
 
     @Transactional
     public void 회원가입(String username, String password, String email) {
-        // 1. 유저네임 중복 체크 (필터링)
+        // 1. 유저네임 중복 체크 (필터링)!!
         Optional<User> optUser = userRepository.findByUsername(username);
 
         if (optUser.isPresent()) {
-            throw new RuntimeException("유저 네임이 중복되었습니다");
+            throw new RuntimeException("유저 네임이 중복되었습니다!!!");
         }
 
         // 2. 비영속 객체

@@ -44,7 +44,7 @@ public class BoardService {
 
     @Transactional
     public void 게시글삭제(int id) {
-        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 글을을 찾을 수 없어요"));
+        Board board = boardRepository.findById(id).orElseThrow(() -> new RuntimeException("해당 글을 찾을 수 없어요"));
 
         if (board != null)
             boardRepository.delete(board);
