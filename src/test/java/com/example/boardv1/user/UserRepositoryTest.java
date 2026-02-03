@@ -5,14 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.context.annotation.Import;
 
-import jakarta.persistence.EntityManager;
-
 @Import(UserRepository.class)
-@DataJpaTest
+@DataJpaTest // EntityManger가 ioc에 등록됨
 public class UserRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Test
+    public void findById_test() {
+        int id = 5;
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("해당 아이디로 유저를 찾을 수 없어요"));
+
+        System.out.println("user : " + user);
+    }
 
     @Test
     public void save_fail_test() {
@@ -23,9 +31,9 @@ public class UserRepositoryTest {
         user.setEmail("cos@nate.com");
 
         // when
-        User findUser = userRepository.save(user); // 영속화 됨
+        User findUser = userRepository.save(user); // 영속화됨
 
-        // then
+        // eye
         System.out.println(findUser);
     }
 
@@ -38,7 +46,7 @@ public class UserRepositoryTest {
         user.setEmail("love@nate.com");
 
         // when
-        User findUser = userRepository.save(user); // 영속화 됨
+        User findUser = userRepository.save(user); // 영속화됨
 
         // eye
         System.out.println(findUser);
@@ -47,14 +55,12 @@ public class UserRepositoryTest {
     @Test
     public void findByUsername_test() {
         // given
-        String username = "ssar";
+        String username = "good";
 
         // when (ssar, 1234)
-        User findUser = userRepository.findByUsername(username);
+        User findUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("해당 user를 찾을 수 없어요"));
 
-        // 로그인 기능 중 패스워드 검증
-        if (findUser.getPassword().equals("1234")) {
-        }
         // eye
         System.out.println(findUser);
     }

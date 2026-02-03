@@ -1,5 +1,7 @@
 package com.example.boardv1.user;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -14,9 +16,9 @@ public class UserService {
     @Transactional
     public void 회원가입(String username, String password, String email) {
         // 1. 유저네임 중복 체크 (필터링)
-        User findUser = userRepository.findByUsername(username);
+        Optional<User> optUser = userRepository.findByUsername(username);
 
-        if (findUser != null) {
+        if (optUser.isPresent()) {
             throw new RuntimeException("유저 네임이 중복되었습니다");
         }
 
@@ -32,9 +34,8 @@ public class UserService {
     }
 
     public User 로그인(String username, String password) {
-        User findUser = userRepository.findByUsername(username);
-        if (findUser == null)
-            throw new RuntimeException("username을 찾을 수 없어요");
+        User findUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("username을 찾을 수가 없어요"));
 
         if (!findUser.getPassword().equals(password)) {
             throw new RuntimeException("패스워드가 일치하지 않아요");
